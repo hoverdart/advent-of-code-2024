@@ -41,7 +41,7 @@ public class PartOne {
                         int middleNum = updates.length/2;
                         sum+=Integer.valueOf(updates[middleNum]);
                     }
-                }else if (!data.equals("EEE")){ //if its not at the breaking point, switch to getting the X/Y values
+                }else if (data.indexOf("|") > 0){ //if its not at the breaking point, switch to getting the X/Y values
                     int X = Integer.parseInt(data.substring(0, data.indexOf("|")));
                     int Y = Integer.parseInt(data.substring(data.indexOf("|")+1));
                     if (keyValue.get(Y)!= null){
