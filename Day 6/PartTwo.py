@@ -4,11 +4,8 @@ for y in range(len(grid_list)-1):
     grid_list[y].pop()
     for x in range(len(grid_list[y])):
         if grid_list[y][x] == "^":
-            xCount = x
-            yCount = y
-            ogX = x
-            ogY = y
-            grid_list[yCount][xCount] = "X"
+            ogX, ogY = x,y
+            ##grid_list[y][x] = "X"
             break
 count=0
 xMax = len(grid_list[0])
@@ -55,49 +52,30 @@ def changeDir(currentDir):
     elif currentDir == "right":
         return "down"
 
-while xCount < xMax-1 and yCount < yMax-1 and xCount > 0 and yCount > 0:
-    if moveInDir(yCount, xCount, grid_list):
-        moving = move()
-        yCount+=moving[0]
-        xCount+=moving[1]
-        grid_list[yCount][xCount] = "X"
-    else:
-        currentDir = changeDir(currentDir)
-
 secondCt = 0
-for y in range(len(grid_list)):
-    for x in range(len(grid_list[y])):
-        if grid_list[y][x] == "X":
-            count+=1
-            
-            if y != ogY and x != ogX:
-                filer = open("text.txt", "r")
-                ogList = [list(eachLine) for eachLine in filer]
-                for yy in range(len(ogList) - 1):
-                    ogList[yy].pop()
-
-                ogList[y][x] = "#"
-                yCount = ogY
-                xCount = ogX
-                currentDir = "up"
-                foolMeOnce = True
-                SEEN = set()
-                while True:
-                    if (yCount, xCount, currentDir) in SEEN:
-                        foolMeOnce = not foolMeOnce
-                        if foolMeOnce:
-                            secondCt += 1
-                            break
-                    SEEN.add((yCount, xCount, currentDir))
-                    try:
-                        if moveInDir(yCount, xCount, ogList):
-                            moving = move()
-                            yCount += moving[0]
-                            xCount += moving[1]
-                            ogList[yCount][xCount] = "X"
-                        else:
-                            currentDir = changeDir(currentDir)
-                    except:
-                        break
-print(count)
-print(secondCt)
+for y in range(yMax):
+    for x in range(xMax):
+        xCount,yCount = ogX, ogY
+        currentDir = "up"
+        repeatedLoop = set() ##part 2
+        finallyOver = set() ##part 1`
+        while True:
+            if (xCount, yCount, currentDir) in repeatedLoop:
+                secondCt+=1
+                break
+            repeatedLoop.add((xCount, yCount, currentDir))
+            finallyOver.add((xCount, yCount))
+            moving = move()
+            dy = yCount + moving[0]
+            dx = xCount + moving[1]
+            if not (0<=dy<yMax and 0<=dx<xMax):
+                if(grid_list[y][x] == "#"):
+                    count = len(finallyOver)
+                break
+            if grid_list[dy][dx] == "#" or dy == y and dx == x:
+                currentDir = changeDir(currentDir)
+            else:
+                yCount= dy
+                xCount = dx
+print(count) #Part 1
+print(secondCt) #Part 2
